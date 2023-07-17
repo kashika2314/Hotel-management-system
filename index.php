@@ -1,3 +1,24 @@
+<?php
+    session_start();
+    if(isset($_POST['admin_login'])){
+        $connection = mysqli_connect("localhost","root","");
+        $db = mysqli_select_db($connection,"royal_hotel");
+        $query = "select * from admin where email = '$_POST[email]'";
+        $query_run = mysqli_query($connection,$query);
+        while($row = mysqli_fetch_assoc($query_run)){
+            if($row['email'] == $_POST['email']){
+                if($row['password'] == $_POST['password']){
+                    $_SESSION['name'] = $row['name'];
+                    $_SESSION['email'] = $row['email'];
+                    header("Location:admin_dashboard.php");
+                }
+                else{
+                    echo "<script>alert('Wrong Password...');</script>";
+                }
+            }
+        }
+    }
+?>
 <!doctype html>
 <html lang="en">
     <head>
@@ -17,15 +38,6 @@
         <!-- main css -->
         <link rel="stylesheet" href="../css/style.css">
         <link rel="stylesheet" href="../css/responsive.css">
-        <link rel="stylesheet" type="text/css" href="../bootstrap-4.4.1/css/bootstrap.min.css">
-        <script type="text/javascript" src="../bootstrap-4.4.1/js/juqery_latest.js"></script>
-        <script type="text/javascript" src="../bootstrap-4.4.1/js/bootstrap.min.js"></script>
-
-        <style type="text/css">
-            .btn{
-                margin-right: 15px;
-            }
-        </style>
     </head>
     <body>
         <!--================Header Area =================-->
@@ -42,7 +54,7 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
-                            <li class="nav-item active"><a class="nav-link" href="admin_dashboard.php">Home</a></li> 
+                            <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li> 
                             <li class="nav-item"><a class="nav-link" href="about.html">About us</a></li>
                             <li class="nav-item"><a class="nav-link" href="accomodation.html">Accomodation</a></li>
                             <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
@@ -61,109 +73,36 @@
             </div>
         </header>
         <!--================Header Area Finish=================-->
-        <br><br><br><br><br><br>
-        
+    
+        <br><br><br><br><br>
         <!--================Banner Area END =================-->
        <div class="row">
        	<div class="col-md-12">
-       		<center><h3>Room Booking Page</h3></center>
+       		<center><h3>Admin Login Page</h3></center>
        	</div>
        </div><br><br>
-       <center><h5>Room Type:-  Single Non Ac Rooms</h5></center><br>
         <div class="row">
-            <?php
-                $connection = mysqli_connect("localhost","root","");
-                $db = mysqli_select_db($connection,"royal_hotel");
-                $query = "select * from single_non_ac";
-                $query_run = mysqli_query($connection,$query);
-                while($row = mysqli_fetch_assoc($query_run)){
-                    ?>
-                        <div class="col-md-2" style="margin-left: 50px;">
-                        <div class="card bg-light" style="width: 300px">
-                        <div class="card-header">Room No: <?php echo $row["room_no"]?></div>
-                        <div class="card-body">
-                            <p class="card-text">Room Status: <?php if($row["status"]==0){echo "<b>Available</b>";}else{echo "<b>Already Booked</b>";}?></p>
-                            <a href="book_room.php?rn=<?php echo $row['room_no'] . "&rt=a";?>" class="btn btn-primary <?php if($row["status"]==0){echo "active";}else{echo "disabled";}?>" role="button" aria-disabled="<?php if($row['status']==0){echo "false";}else{echo "true";}?>">Book</a>
-                            <a href="unbook.php?rn=<?php echo $row['room_no'] . "&rt=a";?>" class="btn btn-danger <?php if($row["status"]==0){echo "disabled";}else{echo "active";}?>" role="button" aria-disabled="<?php if($row['status']==0){echo "true";}else{echo "false";}?>">Unbook</a>
-                        </div>
-                    </div>
-                    </div>  
-                    <?php 
-                }
-            ?>
-        </div><br><br>
-        <center><h5>Room Type:-  Single Ac Rooms</h5></center><br>
-        <div class="row">
-            <?php
-                $connection = mysqli_connect("localhost","root","");
-                $db = mysqli_select_db($connection,"royal_hotel");
-                $query = "select * from single_ac";
-                $query_run = mysqli_query($connection,$query);
-                while($row = mysqli_fetch_assoc($query_run)){
-                    ?>
-                        <div class="col-md-2" style="margin-left: 50px;">
-                        <div class="card bg-light" style="width: 300px">
-                        <div class="card-header">Room No: <?php echo $row["room_no"]?></div>
-                        <div class="card-body">
-                            <p class="card-text">Room Status: <?php if($row["status"]==0){echo "<b>Available</b>";}else{echo "<b>Already Booked</b>";}?></p>
-                            <a href="book_room.php?rn=<?php echo $row['room_no'] . "&rt=b";?>" class="btn btn-primary <?php if($row["status"]==0){echo "active";}else{echo "disabled";}?>" role="button" aria-disabled="<?php if($row['status']==0){echo "false";}else{echo "true";}?>">Book</a>
-                            <a href="unbook.php?rn=<?php echo $row['room_no']. "&rt=b";?>" class="btn btn-danger <?php if($row["status"]==0){echo "disabled";}else{echo "active";}?>" role="button" aria-disabled="<?php if($row['status']==0){echo "true";}else{echo "false";}?>">Unbook</a>
-                        </div>
-                    </div>
-                    </div>  
-                    <?php 
-                }
-            ?>
-        </div><br><br>
-        <center><h5>Room Type:-  Double Non-Ac Rooms</h5></center><br>
-        <div class="row">
-            <?php
-                $connection = mysqli_connect("localhost","root","");
-                $db = mysqli_select_db($connection,"royal_hotel");
-                $query = "select * from double_non_ac";
-                $query_run = mysqli_query($connection,$query);
-                while($row = mysqli_fetch_assoc($query_run)){
-                    ?>
-                        <div class="col-md-2" style="margin-left: 50px;">
-                        <div class="card bg-light" style="width: 300px">
-                        <div class="card-header">Room No: <?php echo $row["room_no"]?></div>
-                        <div class="card-body">
-                            <p class="card-text">Room Status: <?php if($row["status"]==0){echo "<b>Available</b>";}else{echo "<b>Already Booked</b>";}?></p>
-                            <a href="book_room.php?rn=<?php echo $row['room_no'] . "&rt=c";?>" class="btn btn-primary <?php if($row["status"]==0){echo "active";}else{echo "disabled";}?>" role="button" aria-disabled="<?php if($row['status']==0){echo "false";}else{echo "true";}?>">Book</a>
-                            <a href="unbook.php?rn=<?php echo $row['room_no']. "&rt=c";?>" class="btn btn-danger <?php if($row["status"]==0){echo "disabled";}else{echo "active";}?>" role="button" aria-disabled="<?php if($row['status']==0){echo "true";}else{echo "false";}?>">Unbook</a>
-                        </div>
-                    </div>
-                    </div>  
-                    <?php 
-                }
-            ?>
-        </div><br><br>
-        <center><h5>Room Type:-  Double Ac Rooms</h5></center><br>
-        <div class="row">
-            <?php
-                $connection = mysqli_connect("localhost","root","");
-                $db = mysqli_select_db($connection,"royal_hotel");
-                $query = "select * from double_ac";
-                $query_run = mysqli_query($connection,$query);
-                while($row = mysqli_fetch_assoc($query_run)){
-                    ?>
-                        <div class="col-md-2" style="margin-left: 50px;">
-                        <div class="card bg-light" style="width: 300px">
-                        <div class="card-header">Room No: <?php echo $row["room_no"]?></div>
-                        <div class="card-body">
-                            <p class="card-text">Room Status: <?php if($row["status"]==0){echo "<b>Available</b>";}else{echo "<b>Already Booked</b>";}?></p>
-                            <a href="book_room.php?rn=<?php echo $row['room_no'] . "&rt=d";?>" class="btn btn-primary <?php if($row["status"]==0){echo "active";}else{echo "disabled";}?>" role="button" aria-disabled="<?php if($row['status']==0){echo "false";}else{echo "true";}?>">Book</a>
-                            <a href="unbook.php?rn=<?php echo $row['room_no']. "&rt=d";?>" class="btn btn-danger <?php if($row["status"]==0){echo "disabled";}else{echo "active";}?>" role="button" aria-disabled="<?php if($row['status']==0){echo "true";}else{echo "false";}?>">Unbook</a>
-                        </div>
-                    </div>
-                    </div>  
-                    <?php 
-                }
-            ?>
+        	<div class="col-md-2"></div>
+        	<div class="col-md-8">
+        		<form action="" method="post">
+			<div class="form-group">
+		    	<label for="name">Email:</label>
+		    	<input type="text" class="form-control" name="email" required="">
+		  	</div>
+			<div class="form-group">
+		    	<label for="email">Password:</label>
+		    	<input type="password" class="form-control" name="password" required="">
+		  	</div>
+		  	
+				<button type="submit" class="btn btn-warning" name="admin_login">Login</button>
+		</form>
+        
+        	</div>
+        	<div class="col-md-2"></div>
         </div>
         <br><br><br><br><br><br>
         <!--================ start footer Area  =================-->	
-        <!--<footer class="footer-area section_gap">
+        <footer class="footer-area section_gap">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-3  col-md-6 col-sm-6">
@@ -229,9 +168,9 @@
                 <div class="border_line"></div>
                 <div class="row footer-bottom d-flex justify-content-between align-items-center">
                     <p class="col-lg-8 col-sm-12 footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-<!-- Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
-                    <!--<div class="col-lg-4 col-sm-12 footer-social">
+                    <div class="col-lg-4 col-sm-12 footer-social">
                         <a href="#"><i class="fa fa-facebook"></i></a>
                         <a href="#"><i class="fa fa-twitter"></i></a>
                         <a href="#"><i class="fa fa-dribbble"></i></a>
@@ -239,7 +178,7 @@
                     </div>
                 </div>
             </div>
-        </footer>-->
+        </footer>
 		<!--================ End footer Area  =================-->
         
         
